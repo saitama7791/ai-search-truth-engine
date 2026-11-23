@@ -1,0 +1,933 @@
+{
+  "version": 1,
+  "sweep_id": 1,
+  "sweep_date": "2026-11-23",
+  "sweep_note": "Sweep #1 — board seeded from 15 primary sources (peer-reviewed studies, large-N industry studies, official engine docs), plus the Nov 17 2026 Google-Agent guidance and the Oct 30 2026 Anthropic training-signal change. Every claim carries its source URL.",
+  "site_hint": "https://aisearchos.com/truth-engine",
+  "platforms": [
+    {
+      "id": "chatgpt",
+      "name": "ChatGPT",
+      "vendor": "OpenAI",
+      "engine": "Live web search inside ChatGPT; retrieval over an index that behaves like Bing's system.",
+      "current_model": "GPT-5 family model with live search (exact point release re-checked in every weekly sweep).",
+      "crawlers": [
+        {
+          "token": "GPTBot",
+          "purpose": "Model training — controls whether your content shapes future models."
+        },
+        {
+          "token": "OAI-SearchBot",
+          "purpose": "Live search index — controls whether your pages can be retrieved and cited in answers."
+        },
+        {
+          "token": "ChatGPT-User",
+          "purpose": "On-demand fetch, fires when a user asks ChatGPT to open your page."
+        }
+      ],
+      "cites": "Cites fewer sources per answer but absorbs what it cites more deeply — definitions, numbers, comparisons and procedures get lifted into the answer text.",
+      "field_notes": "Weakest link to classic authority metrics of all major engines — the most open surface for lesser-known brands. Source mix shifts abruptly: Reddit citation share reportedly fell from ~60% to ~10% within a month in 2025 (Semrush).",
+      "sources": [
+        {
+          "label": "Citation vs absorption study (arXiv 2604.25707)",
+          "url": "https://arxiv.org/abs/2604.25707"
+        },
+        {
+          "label": "Ahrefs 75k-brand correlation study, Dec 2022",
+          "url": "https://ahrefs.com/blog/ai-brand-visibility-correlations/"
+        },
+        {
+          "label": "OpenAI bot documentation",
+          "url": "https://platform.openai.com/docs/bots"
+        }
+      ],
+      "last_verified": "2026-11-23"
+    },
+    {
+      "id": "google-ai",
+      "name": "Google AI Overviews & AI Mode",
+      "vendor": "Google",
+      "engine": "Answers grounded in Google Search — the consensus engine.",
+      "current_model": "Gemini family, grounded in the live Google Search index (exact version re-checked weekly).",
+      "crawlers": [
+        {
+          "token": "Googlebot",
+          "purpose": "The search index itself — no Googlebot crawl, no grounding corpus."
+        },
+        {
+          "token": "Google-Extended",
+          "purpose": "Controls whether Gemini Apps (the assistant) may use your content for grounding and training."
+        },
+        {
+          "token": "Google-Agent",
+          "purpose": "User-triggered agent fetcher — Google-hosted agents navigate the web and act on user request (search, filter, add-to-cart, booking). Generally ignores robots.txt; allow at CDN/WAF level. Uses user-triggered-agents.json IP ranges, which do not overlap Googlebot's.",
+          "new": true
+        }
+      ],
+      "cites": "Rewards established brand signal hardest of all engines measured — branded anchors 0.628, branded search volume 0.466. Wikipedia, YouTube, Reddit and .gov sources over-indexed.",
+      "field_notes": "AI Mode is the most consensus-driven surface measured: it favors brands the rest of the web already agrees on. Hardest engine for unknown brands; still the one with the most measurable levers.",
+      "sources": [
+        {
+          "label": "Ahrefs 75k-brand correlation study, Dec 2022",
+          "url": "https://ahrefs.com/blog/ai-brand-visibility-correlations/"
+        },
+        {
+          "label": "Ahrefs AI Overview brand-visibility study, May 2025",
+          "url": "https://ahrefs.com/blog/ai-overview-brand-correlation/"
+        },
+        {
+          "label": "Google crawler documentation",
+          "url": "https://developers.google.com/crawling/docs/crawlers-fetchers/google-user-triggered-fetchers"
+        },
+        {
+          "label": "Google crawling docs changelog",
+          "url": "https://developers.google.com/crawling/docs/changelog"
+        }
+      ],
+      "last_verified": "2026-11-23"
+    },
+    {
+      "id": "perplexity",
+      "name": "Perplexity",
+      "vendor": "Perplexity AI",
+      "engine": "Answer engine with its own crawler and index, plus an agentic browser (Comet).",
+      "current_model": "Sonar model family (exact version re-checked weekly).",
+      "crawlers": [
+        {
+          "token": "PerplexityBot",
+          "purpose": "Surfaces and links websites in Perplexity search results. Not used to crawl content for AI foundation models."
+        },
+        {
+          "token": "Perplexity-User",
+          "purpose": "Fetches a page when a user's question needs it, and links it in the answer. User-requested, so generally ignores robots.txt."
+        }
+      ],
+      "cites": "Breadth-first citation style with numbered sources; community and technical sources over-indexed; strong grounding discipline — most likely to show the raw source list.",
+      "field_notes": "Community and technical sources over-index. The engine most likely to cite a niche industrial blog if it genuinely answers the question.",
+      "sources": [
+        {
+          "label": "Perplexity bots documentation",
+          "url": "https://docs.perplexity.ai/docs/resources/perplexity-crawlers"
+        },
+        {
+          "label": "Citation vs absorption study (arXiv 2604.25707)",
+          "url": "https://arxiv.org/abs/2604.25707"
+        }
+      ],
+      "last_verified": "2026-11-23"
+    },
+    {
+      "id": "claude",
+      "name": "Claude",
+      "vendor": "Anthropic",
+      "engine": "Assistant with a server-side web search tool; leans on curated documentation.",
+      "current_model": "Claude 4.x family (exact version re-checked weekly).",
+      "crawlers": [
+        {
+          "token": "ClaudeBot",
+          "purpose": "Collects public web content that may contribute to model training."
+        },
+        {
+          "token": "Claude-User",
+          "purpose": "Fetches a page while Claude is answering a user's question — controls whether user-directed search can retrieve your content."
+        },
+        {
+          "token": "Claude-SearchBot",
+          "purpose": "Builds and refreshes Claude's web-search index — improves search-result relevance and accuracy. Distinct from training (ClaudeBot).",
+          "new": true
+        }
+      ],
+      "cites": "Most cautious citation posture of the major engines; prefers curated, documentation-style sources over forum content.",
+      "field_notes": "If your content reads like clean documentation — precise names, versions, specs, procedures — Claude retrieves and follows it well. Anthropic also operates Claude-Agent, a browser that visits sites on a user's behalf (Claude Duet).",
+      "sources": [
+        {
+          "label": "Anthropic crawlers documentation",
+          "url": "https://support.claude.com/en/articles/8896518-does-anthropic-crawl-data-from-the-web-and-how-can-site-owners-block-the-crawler"
+        },
+        {
+          "label": "Citation vs absorption study (arXiv 2604.25707)",
+          "url": "https://arxiv.org/abs/2604.25707"
+        }
+      ],
+      "last_verified": "2026-11-23"
+    },
+    {
+      "id": "copilot",
+      "name": "Microsoft Copilot",
+      "vendor": "Microsoft",
+      "engine": "Bing generative search — answers grounded in the Bing index.",
+      "current_model": "OpenAI GPT-5 family model, customized for Bing (exact version re-checked weekly).",
+      "crawlers": [
+        {
+          "token": "bingbot",
+          "purpose": "The Bing index — feeds both classic Bing results and Copilot answers."
+        }
+      ],
+      "cites": "Cites web sources with inline links, drawing on Bing ranking signals.",
+      "field_notes": "Because it rides the Bing index, classic Bing SEO (clean markup, submit via Bing Webmaster Tools) still moves Copilot answers more directly than any 'AI-specific' trick.",
+      "sources": [
+        {
+          "label": "Bing Webmaster Tools",
+          "url": "https://www.bing.com/webmasters"
+        },
+        {
+          "label": "Microsoft Clarity AI-traffic study, Nov 2025",
+          "url": "https://clarity.microsoft.com/blog/ai-traffic-converts-at-3x-the-rate-of-other-channels-study/"
+        }
+      ],
+      "last_verified": "2026-11-23"
+    }
+  ],
+  "tactics": [
+    {
+      "id": "llms-txt",
+      "name": "llms.txt",
+      "aliases": [
+        "llms.txt",
+        "llmstxt",
+        "llms text",
+        "llm txt",
+        "llms.txt file"
+      ],
+      "category": "Technical",
+      "verdict": "myth",
+      "one_liner": "The file almost no AI crawler actually reads. Publishing one changes nothing measurable.",
+      "evidence": [
+        {
+          "claim": "97% of 137,000 published llms.txt files were never fetched by any AI bot; bots requested missing llms.txt files 0 times.",
+          "source": "https://ahrefs.com/blog/llmstxt-study/",
+          "date": "2026-06"
+        },
+        {
+          "claim": "Across ~300k domains, llms.txt showed no effect on AI citations — removing the feature actually improved the prediction model.",
+          "source": "https://www.searchenginejournal.com/llms-txt-shows-no-clear-effect-on-ai-citations-based-on-300k-domains/561542/",
+          "date": "2025-11"
+        },
+        {
+          "claim": "Google's own AI-search guidance lists llms.txt under myths; no engine documents reading it.",
+          "source": "https://aiwebpageseo.com/blog/is-llms-txt-actually-used",
+          "date": "2026"
+        }
+      ],
+      "per_platform": {
+        "chatgpt": {
+          "v": "no-effect",
+          "note": "No documented use."
+        },
+        "google-ai": {
+          "v": "no-effect",
+          "note": "Google lists it under myths."
+        },
+        "perplexity": {
+          "v": "no-effect",
+          "note": "No documented use."
+        },
+        "claude": {
+          "v": "no-effect",
+          "note": "No documented use."
+        }
+      },
+      "industrial_note": "Publish one in ten minutes if it satisfies a checklist. Never pay for it, never expect a citation from it, never let a vendor sell it as a fix.",
+      "confidence": "high",
+      "last_verified": "2026-11-23"
+    },
+    {
+      "id": "brand-mentions",
+      "name": "Third-party brand mentions",
+      "aliases": [
+        "brand mentions",
+        "mentions",
+        "digital pr",
+        "branded mentions",
+        "brand visibility mentions"
+      ],
+      "category": "Off-site",
+      "verdict": "working",
+      "one_liner": "The strongest measured lever: brands the web talks about get named in AI answers.",
+      "evidence": [
+        {
+          "claim": "Branded web mentions correlate 0.664 with AI Overview brand visibility — stronger than Domain Rating (0.326), referring domains (0.295) or backlinks (0.218).",
+          "source": "https://ahrefs.com/blog/ai-overview-brand-correlation/",
+          "date": "2025-05"
+        },
+        {
+          "claim": "Top-quartile brands by web mentions average up to ~10x the AI mentions of the next quartile.",
+          "source": "https://ahrefs.com/blog/ai-overview-brand-correlation/",
+          "date": "2025-05"
+        },
+        {
+          "claim": "Some correlation reflects brand size, but mentions remain the one buildable lever — raw brand size is not buildable.",
+          "source": "https://seoprocheck.com/research/ai-search/brand-mentions-vs-backlinks-ai-visibility/",
+          "date": "2025"
+        }
+      ],
+      "per_platform": {
+        "google-ai": {
+          "v": "working",
+          "note": "Consensus engine — agreement is the signal."
+        },
+        "chatgpt": {
+          "v": "working",
+          "note": "Weakest tie to authority metrics; mentions move it most."
+        },
+        "perplexity": {
+          "v": "working",
+          "note": "Community + press mentions both surface."
+        },
+        "claude": {
+          "v": "mixed",
+          "note": "Cautious posture; prefers curated-press mentions."
+        }
+      },
+      "industrial_note": "For industrial sellers: trade-press articles, directory profiles, standards-body listings and customer case studies are mentions. Ten real placements beat ten backlinks.",
+      "confidence": "medium",
+      "last_verified": "2026-11-23"
+    },
+    {
+      "id": "youtube-presence",
+      "name": "YouTube presence",
+      "aliases": [
+        "youtube",
+        "video",
+        "youtube mentions",
+        "video content"
+      ],
+      "category": "Off-site",
+      "verdict": "working",
+      "one_liner": "The single strongest measured correlate of AI visibility across engines.",
+      "evidence": [
+        {
+          "claim": "YouTube mentions correlate ~0.875 with AI visibility — the strongest single factor across ChatGPT, AI Mode and AI Overviews.",
+          "source": "https://ahrefs.com/blog/ai-brand-visibility-correlations/",
+          "date": "2025-12"
+        },
+        {
+          "claim": "YouTube is among the most-cited sources on Google's AI surfaces.",
+          "source": "https://ahrefs.com/blog/ai-brand-visibility-correlations/",
+          "date": "2025-12"
+        }
+      ],
+      "industrial_note": "Filmed plant tours, machine demos and installation walkthroughs double as citation bait — engineers ask AI 'how does X machine work' and get answered from YouTube.",
+      "confidence": "medium",
+      "last_verified": "2026-11-23"
+    },
+    {
+      "id": "original-stats",
+      "name": "Original statistics",
+      "aliases": [
+        "statistics",
+        "stats",
+        "data points",
+        "original data",
+        "numbers"
+      ],
+      "category": "Content",
+      "verdict": "working",
+      "one_liner": "Real numbers in your content measurably lift AI visibility — and get lifted into answers.",
+      "evidence": [
+        {
+          "claim": "Adding statistics achieved +30-40% relative visibility in the original GEO paper benchmark (effect varies by query domain).",
+          "source": "https://arxiv.org/abs/2311.09735",
+          "date": "2024-05"
+        },
+        {
+          "claim": "Stats/credibility markers confirmed as citation-likelihood factors in follow-up multi-objective work.",
+          "source": "https://aclanthology.org/2026.acl-long.929.pdf",
+          "date": "2026"
+        }
+      ],
+      "industrial_note": "Publish your cycle times, defect rates, tolerance specs and energy-savings numbers. Your plant data is original data — the exact thing these engines absorb.",
+      "confidence": "high",
+      "last_verified": "2026-11-23"
+    },
+    {
+      "id": "quotable-phrasing",
+      "name": "Quotable phrasing",
+      "aliases": [
+        "quotes",
+        "quotations",
+        "quotable"
+      ],
+      "category": "Content",
+      "verdict": "working",
+      "one_liner": "Content written to be quoted gets quoted — by the AI, verbatim.",
+      "evidence": [
+        {
+          "claim": "Quotation addition was among the three highest-scoring GEO techniques in the KDD '24 benchmark.",
+          "source": "https://arxiv.org/abs/2311.09735",
+          "date": "2024-05"
+        }
+      ],
+      "industrial_note": "Write the one-sentence definition of your category the way an engineer would repeat it to their plant manager. If it can't be quoted, it can't be absorbed.",
+      "confidence": "medium",
+      "last_verified": "2026-11-23"
+    },
+    {
+      "id": "cite-your-sources",
+      "name": "Citing sources in content",
+      "aliases": [
+        "citations in content",
+        "credible citations",
+        "references"
+      ],
+      "category": "Content",
+      "verdict": "working",
+      "one_liner": "Pages that cite their evidence get trusted — and cited — more.",
+      "evidence": [
+        {
+          "claim": "Cite Sources achieved +30-40% relative visibility in the original GEO benchmark.",
+          "source": "https://arxiv.org/abs/2311.09735",
+          "date": "2024-05"
+        },
+        {
+          "claim": "Evidence richness and credibility markers confirmed across 252,000 paired competitive-GEO trials.",
+          "source": "https://dl.acm.org/doi/42.1145/3805712.3808445",
+          "date": "2026"
+        }
+      ],
+      "industrial_note": "Link to the standard, the spec sheet, the study. Engines reward pages that show their work — same as your customers' auditors do.",
+      "confidence": "high",
+      "last_verified": "2026-11-23"
+    },
+    {
+      "id": "extractable-structure",
+      "name": "Extractable structure",
+      "aliases": [
+        "structure",
+        "definitions",
+        "comparisons",
+        "procedures",
+        "faq format",
+        "headings"
+      ],
+      "category": "Content",
+      "verdict": "working",
+      "one_liner": "Definitions, numbers, comparisons and procedures — the evidence AI can actually lift.",
+      "evidence": [
+        {
+          "claim": "High-absorption pages (content that shapes the answer text) are longer, more structured, and richer in extractable evidence: definitions, numbers, comparisons, procedures.",
+          "source": "https://arxiv.org/abs/2604.25707",
+          "date": "2026"
+        },
+        {
+          "claim": "Topical relevance and context position are the most reproducible levers in a 45-study survey of GEO research.",
+          "source": "https://arxiv.org/abs/2607.14035",
+          "date": "2026"
+        }
+      ],
+      "per_platform": {
+        "chatgpt": {
+          "v": "working",
+          "note": "Absorbs deeply what it cites."
+        },
+        "google-ai": {
+          "v": "working",
+          "note": "Cites more sources shallowly — structure wins retrieval."
+        },
+        "perplexity": {
+          "v": "working",
+          "note": "Numbered-source style rewards clean structure."
+        }
+      },
+      "industrial_note": "Spec tables, chemical-compatibility lists and step-by-step procedures are exactly the extractable evidence these engines lift. A great spec sheet is AI-content gold.",
+      "confidence": "high",
+      "last_verified": "2026-11-23"
+    },
+    {
+      "id": "special-ai-schema",
+      "name": "Special 'AI schema'",
+      "aliases": [
+        "ai schema",
+        "ai markup",
+        "special schema for ai",
+        "llm schema"
+      ],
+      "category": "Technical",
+      "verdict": "myth",
+      "one_liner": "No engine documents an AI-specific markup requirement. Anyone selling one is selling air.",
+      "evidence": [
+        {
+          "claim": "No answer engine documents AI-specific markup requirements; structured data still helps rich results and entity disambiguation — which is regular SEO, not a new switch.",
+          "source": "https://www.montrelia.com/geo-aeo-llms-txt-claims-checked",
+          "date": "2026"
+        }
+      ],
+      "industrial_note": "Keep your schema.org Product/Organization markup correct — it feeds entity understanding. But nobody accepts 'AI schema' as a deliverable; there is no such standard to implement.",
+      "confidence": "high",
+      "last_verified": "2026-11-23"
+    },
+    {
+      "id": "guaranteed-slots",
+      "name": "Guaranteed ChatGPT placements",
+      "aliases": [
+        "guaranteed",
+        "guaranteed rankings",
+        "guaranteed #1 in chatgpt",
+        "pay for placement"
+      ],
+      "category": "Strategy",
+      "verdict": "myth",
+      "one_liner": "AI answers are non-deterministic. Nobody can guarantee you a slot, and one probe proves nothing.",
+      "evidence": [
+        {
+          "claim": "600 volunteers ran identical prompts 2,961 times: the same brand list recurred in under 1 in 100 runs; the same order in under 1 in 1,000.",
+          "source": "https://sparktoro.com/blog/new-research-ais-are-highly-inconsistent-when-recommending-brands-or-products-marketers-should-take-care-when-tracking-ai-visibility/",
+          "date": "2026-01"
+        }
+      ],
+      "industrial_note": "When a vendor shows you one screenshot where you appear — ask how many runs it took. Judge campaigns on repeated runs across engines, not a single replay.",
+      "confidence": "high",
+      "last_verified": "2026-11-23"
+    },
+    {
+      "id": "page-scaling",
+      "name": "Scaling page count",
+      "aliases": [
+        "page count",
+        "more pages",
+        "programmatic pages",
+        "scale pages",
+        "scaled content"
+      ],
+      "category": "Content",
+      "verdict": "not-working",
+      "one_liner": "Near-zero correlation with AI visibility — and a spam risk on top.",
+      "evidence": [
+        {
+          "claim": "Page count correlates ~0.194 with AI visibility — effectively nothing, across 75k brands.",
+          "source": "https://ahrefs.com/blog/ai-brand-visibility-correlations/",
+          "date": "2025-12"
+        },
+        {
+          "claim": "Google flags scaled query-targeting content as spam policy territory.",
+          "source": "https://www.montrelia.com/geo-aeo-llms-txt-claims-checked",
+          "date": "2026"
+        }
+      ],
+      "industrial_note": "Your 40,000 SKU pages do nothing here. Forty pages that answer real buyer questions do.",
+      "confidence": "high",
+      "last_verified": "2026-11-23"
+    },
+    {
+      "id": "google-rank-transfer",
+      "name": "'Rank on Google and the AI will follow'",
+      "aliases": [
+        "google rankings",
+        "seo transfer",
+        "rank and follow",
+        "classic seo transfer"
+      ],
+      "category": "Strategy",
+      "verdict": "mixed",
+      "one_liner": "Only ~12% of AI-cited URLs appear in Google's top-10. AI citations are a separate game with its own scoreboard.",
+      "evidence": [
+        {
+          "claim": "Only ~12% of URLs cited by AI tools appear in Google's top-10 for the same query; the engines also barely agree with each other.",
+          "source": "https://www.frase.io/blog/which-ai-engines-cite-which-sources",
+          "date": "2025"
+        },
+        {
+          "claim": "LLM search engines cite different sources from Google/Bing, on top of what is already covered or missing in the original index.",
+          "source": "https://arxiv.org/pdf/2512.09483",
+          "date": "2025"
+        }
+      ],
+      "industrial_note": "Do the classic basics — they feed retrieval everywhere. Then measure AI visibility separately, because it will not follow automatically.",
+      "confidence": "high",
+      "last_verified": "2026-11-23"
+    },
+    {
+      "id": "reddit-community",
+      "name": "Reddit & community mentions",
+      "aliases": [
+        "reddit",
+        "community mentions",
+        "forums",
+        "reddit mentions"
+      ],
+      "category": "Off-site",
+      "verdict": "mixed",
+      "one_liner": "Heavily cited by Google surfaces — but ChatGPT's Reddit share collapsed, and engineered mentions are now a crackdown target.",
+      "evidence": [
+        {
+          "claim": "Reddit is among the most-cited sources across Google's AI surfaces.",
+          "source": "https://ahrefs.com/blog/ai-brand-visibility-correlations/",
+          "date": "2025-12"
+        },
+        {
+          "claim": "ChatGPT's Reddit citation share reportedly fell from ~60% to ~10% within a single month in 2025.",
+          "source": "https://www.frase.io/blog/which-ai-engines-cite-which-sources",
+          "date": "2025"
+        },
+        {
+          "claim": "Google's guidance warns that seeking inauthentic mentions 'isn't as helpful as it might seem' — operators can discount fabrications.",
+          "source": "https://www.montrelia.com/geo-aeo-llms-txt-claims-checked",
+          "date": "2026"
+        }
+      ],
+      "per_platform": {
+        "google-ai": {
+          "v": "working",
+          "note": "Reddit over-cited on Google surfaces."
+        },
+        "chatgpt": {
+          "v": "mixed",
+          "note": "Share collapsed in 2025; treat as volatile."
+        },
+        "perplexity": {
+          "v": "working",
+          "note": "Community sources surface strongly."
+        }
+      },
+      "industrial_note": "Answering real questions in r/manufacturing builds mentions that survive. Paying for thread drops is now actively risky — Google is cracking down, and buyers can smell it too.",
+      "confidence": "medium",
+      "last_verified": "2026-11-23"
+    },
+    {
+      "id": "entity-consistency",
+      "name": "Entity consistency",
+      "aliases": [
+        "entity",
+        "knowledge graph",
+        "entity optimization",
+        "brand entity",
+        "consistent naming"
+      ],
+      "category": "Strategy",
+      "verdict": "working",
+      "one_liner": "Same name, same story, everywhere — that's what 'established' means to a consensus engine.",
+      "evidence": [
+        {
+          "claim": "AI Mode / AI Overviews reward established brand signal hardest: branded anchors 0.628, branded search volume 0.466.",
+          "source": "https://ahrefs.com/blog/ai-brand-visibility-correlations/",
+          "date": "2025-12"
+        },
+        {
+          "claim": "Engine field notes: the Google surfaces are the 'consensus engine', rewarding established brand signal hardest; .gov and Wikipedia over-indexed.",
+          "source": "https://arxiv.org/abs/2604.25707",
+          "date": "2026"
+        }
+      ],
+      "industrial_note": "One company name, spelled one way, on your site, your directories, your standards-body listings and your press. Inconsistent naming confuses the machine that writes the shortlist about who you actually are.",
+      "confidence": "medium",
+      "last_verified": "2026-11-23"
+    },
+    {
+      "id": "wikipedia-presence",
+      "name": "Wikipedia & reference presence",
+      "aliases": [
+        "wikipedia",
+        "wikidata",
+        "reference sites"
+      ],
+      "category": "Off-site",
+      "verdict": "working",
+      "one_liner": "Wikipedia and similar reference sources are over-cited by Google's AI surfaces.",
+      "evidence": [
+        {
+          "claim": "Wikipedia, YouTube and Reddit are heavily cited by Google AI surfaces; .gov over-indexed.",
+          "source": "https://ahrefs.com/blog/ai-brand-visibility-correlations/",
+          "date": "2025-12"
+        }
+      ],
+      "per_platform": {
+        "google-ai": {
+          "v": "working",
+          "note": "Heavily cited."
+        },
+        "chatgpt": {
+          "v": "mixed",
+          "note": "Training-era knowledge carries over; verify in weekly sweeps."
+        },
+        "perplexity": {
+          "v": "mixed",
+          "note": "Reference-style sources surface in technical queries."
+        }
+      },
+      "industrial_note": "Notability rules make a company page unlikely, but Wikidata entries, category definitions and industry-association pages you appear on are reachable — and read.",
+      "confidence": "medium",
+      "last_verified": "2026-11-23"
+    },
+    {
+      "id": "blanket-bot-blocking",
+      "name": "Blocking all AI crawlers",
+      "aliases": [
+        "block ai bots",
+        "robots.txt block",
+        "block gptbot",
+        "block crawlers"
+      ],
+      "category": "Technical",
+      "verdict": "myth",
+      "one_liner": "As a 'security' default it throws away citations. Each bot feeds a different surface — block per surface, on purpose.",
+      "evidence": [
+        {
+          "claim": "GPTBot controls training; OAI-SearchBot controls live-search citation; ChatGPT-User controls on-demand fetch. ClaudeBot / Claude-User / Claude-SearchBot split the same way. Blocking one is not blocking both.",
+          "source": "https://platform.openai.com/docs/bots",
+          "date": "2026"
+        },
+        {
+          "claim": "Blocking AI crawlers wholesale 'for security' without knowing which bot feeds which surface is a documented anti-pattern.",
+          "source": "https://www.aeochecker.ai/blogs/how-ai-answer-engines-pick-sources",
+          "date": "2025-09"
+        }
+      ],
+      "per_platform": {
+        "chatgpt": {
+          "v": "conditional",
+          "note": "Decide training vs search vs on-demand separately."
+        },
+        "google-ai": {
+          "v": "conditional",
+          "note": "Google-Extended does not control Search; Googlebot is Search."
+        },
+        "claude": {
+          "v": "conditional",
+          "note": "ClaudeBot vs Claude-User split."
+        }
+      },
+      "industrial_note": "If your WAF blocks AI bots by default, you may be invisible in the exact answers your buyers read. Check per token — the Truth Board's platform panel lists every current token and what it feeds.",
+      "confidence": "high",
+      "last_verified": "2026-11-23"
+    },
+    {
+      "id": "bought-mentions",
+      "name": "Buying mentions & citation packages",
+      "aliases": [
+        "buy citations",
+        "citation packages",
+        "paid mentions",
+        "fake mentions"
+      ],
+      "category": "Strategy",
+      "verdict": "not-working",
+      "one_liner": "Fabricated mentions can be discounted by the engines — and they're a reputational risk with your buyers.",
+      "evidence": [
+        {
+          "claim": "Google's AI-search guidance warns inauthentic mentions 'isn't as helpful as it might seem'; engine operators can discount fabrications.",
+          "source": "https://www.montrelia.com/geo-aeo-llms-txt-claims-checked",
+          "date": "2026"
+        },
+        {
+          "claim": "Invisible prompt-injection text is a platform-risk footgun, never a strategy.",
+          "source": "https://www.montrelia.com/geo-aeo-llms-txt-claims-checked",
+          "date": "2026"
+        }
+      ],
+      "industrial_note": "Industrial buyers talk to each other. A paid shill campaign that gets exposed costs more than the mentions were worth — in a market where reputation is the sales cycle.",
+      "confidence": "high",
+      "last_verified": "2026-11-23"
+    },
+    {
+      "id": "prompt-stuffing",
+      "name": "Prompt stuffing & hidden AI text",
+      "aliases": [
+        "prompt stuffing",
+        "hidden prompts",
+        "ai keyword stuffing",
+        "invisible text"
+      ],
+      "category": "Technical",
+      "verdict": "myth",
+      "one_liner": "Text aimed at crawlers instead of readers is spam by another name — with extra platform risk.",
+      "evidence": [
+        {
+          "claim": "GEO articles that stuff 'AI prompt keywords' into headings don't win selection — relevance, trust and evidence still decide.",
+          "source": "https://arxiv.org/abs/2607.14035",
+          "date": "2026"
+        },
+        {
+          "claim": "Invisible prompt-injection text is flagged by Google as a platform-risk footgun.",
+          "source": "https://www.montrelia.com/geo-aeo-llms-txt-claims-checked",
+          "date": "2026"
+        }
+      ],
+      "industrial_note": "If a vendor's deliverable includes white-on-white text or 'AI trigger phrases' in every heading — you're buying a penalty, not a presence.",
+      "confidence": "high",
+      "last_verified": "2026-11-23"
+    },
+    {
+      "id": "agentic-commerce",
+      "name": "Agentic commerce readiness",
+      "aliases": [
+        "agentic commerce",
+        "ai buying agents",
+        "agent mode",
+        "agentic checkout",
+        "agents that shortlist vendors"
+      ],
+      "category": "Strategy",
+      "verdict": "conditional",
+      "one_liner": "Buying agents now fetch and read your site directly. Machine-readable specs, pricing and availability are becoming agent bait.",
+      "evidence": [
+        {
+          "claim": "Google operates Google-Agent (added March 2026): hosted agents that navigate and act on the web on user request. Its Nov 17, 2026 'Allow Google-Agent traffic' guide describes full purchase journeys — on-site search, filtering, add-to-cart, booking — and how WAFs must skip challenges for verified agent traffic.",
+          "source": "https://ppc.land/google-lists-six-ways-sites-still-block-its-ai-agent-after-allowing-it/",
+          "date": "2026-11-17"
+        },
+        {
+          "claim": "ChatGPT inline brand links (from May 2026) narrowed the traffic gap between AI answers and organic search.",
+          "source": "https://www.seoworks.co.uk/downloads/ai-referral-traffic-benchmark/",
+          "date": "2026-05"
+        }
+      ],
+      "per_platform": {
+        "google-ai": {
+          "v": "conditional",
+          "note": "Google-Agent: user-triggered, WAF-gated, does search → add-to-cart journeys."
+        },
+        "chatgpt": {
+          "v": "conditional",
+          "note": "Inline brand links route answer readers to you."
+        }
+      },
+      "industrial_note": "The shortlist is starting to be machine-read: clean spec tables, schema.org Product/Offer markup, crawlable availability. If an agent can't parse your catalog, it can't shortlist you.",
+      "confidence": "medium",
+      "last_verified": "2026-11-23"
+    }
+  ],
+  "myths": [
+    {
+      "claim": "“You need llms.txt to be cited by AI.”",
+      "reality": "97% of published llms.txt files are never fetched by any AI bot, and no effect on citations was found across ~300k domains. Google's own docs list it under myths.",
+      "source": "https://ahrefs.com/blog/llmstxt-study/"
+    },
+    {
+      "claim": "“You need special AI schema markup.”",
+      "reality": "No engine documents AI-specific markup. Regular structured data helps entity understanding and rich results — that's classic SEO, not a new standard.",
+      "source": "https://www.montrelia.com/geo-aeo-llms-txt-claims-checked"
+    },
+    {
+      "claim": "“We can guarantee you #1 in ChatGPT.”",
+      "reality": "Identical prompts return the same brand list in under 1 of 100 runs. Non-deterministic answers make guarantees impossible — and single screenshots meaningless.",
+      "source": "https://sparktoro.com/blog/new-research-ais-are-highly-inconsistent-when-recommending-brands-or-products-marketers-should-take-care-when-tracking-ai-visibility/"
+    },
+    {
+      "claim": "“Rank on Google and the AI will follow.”",
+      "reality": "Only ~12% of AI-cited URLs also rank in Google's top-10. AI visibility has its own scoreboard and must be measured separately.",
+      "source": "https://www.frase.io/blog/which-ai-engines-cite-which-sources"
+    },
+    {
+      "claim": "“More pages = more AI visibility.”",
+      "reality": "Page count correlates near-zero (0.194) with AI visibility, and scaled query-targeting content is spam-policy territory.",
+      "source": "https://ahrefs.com/blog/ai-brand-visibility-correlations/"
+    },
+    {
+      "claim": "“Buy our citation package — 50 AI mentions, guaranteed.”",
+      "reality": "Engine operators can discount fabricated mentions, and Google's guidance is blunt that inauthentic mentions aren't as helpful as they might seem.",
+      "source": "https://www.montrelia.com/geo-aeo-llms-txt-claims-checked"
+    }
+  ],
+  "updates": [
+    {
+      "date": "2026-11-23",
+      "platform": "google-ai",
+      "impact": "low",
+      "title": "Google moves APIs-Google to user-triggered fetcher IP ranges",
+      "summary": "Per the crawling docs changelog: APIs-Google webhook pushes now come from user-triggered-fetcher IP ranges and, by classification, those ignore robots.txt rules.",
+      "for_b2b": "Crawl-doc housekeeping. Nothing to change for most sellers.",
+      "source": "https://developers.google.com/crawling/docs/changelog"
+    },
+    {
+      "date": "2026-11-17",
+      "platform": "google-ai",
+      "impact": "high",
+      "title": "Google publishes 'Allow Google-Agent traffic' guide for CDNs and WAFs",
+      "summary": "Google documented how to let its AI agent through firewalls and bot detection: match the Google-Agent User-Agent header, verify against user-triggered-agents.json IP ranges (which do not overlap Googlebot's), optionally verify Web Bot Auth signatures, and skip CAPTCHAs and JS challenges for verified requests. The guide expects the agent to complete full journeys — on-site search, filtering, detail pages, add-to-cart, booking.",
+      "for_b2b": "If a buying agent can't complete a journey on your site — search, filter, open a product page, request a quote — you're not in its shortlist. 'Block AI agents' category rules in your WAF now have a documented, measurable cost.",
+      "source": "https://ppc.land/google-lists-six-ways-sites-still-block-its-ai-agent-after-allowing-it/"
+    },
+    {
+      "date": "2026-10-30",
+      "platform": "claude",
+      "impact": "medium",
+      "title": "Anthropic begins honoring a 'no AI training' preference signal",
+      "summary": "Anthropic announced it recognizes a machine-readable signal letting site owners say 'no AI training' in robots.txt, rolling out globally across services over time. Directly-named ClaudeBot rules still take priority over the general signal.",
+      "for_b2b": " 'Cite me, don't train on me' is now an explicit, separate choice for Claude surfaces: Claude-SearchBot and Claude-User control visibility, the new signal controls training.",
+      "source": "https://support.claude.com/en/articles/8896518-does-anthropic-crawl-data-from-the-web-and-how-can-site-owners-block-the-crawler"
+    },
+    {
+      "date": "2026-06",
+      "platform": "ai",
+      "impact": "medium",
+      "title": "Ahrefs: 97% of llms.txt files never read",
+      "summary": "The largest llms.txt study (137k files) found 97% were never fetched by any AI bot — the definitive burial of the llms.txt 'citation lever' claim.",
+      "for_b2b": "Any deliverable line-itemed as 'llms.txt optimization' is padding. Ask for the robots.txt and per-bot access plan instead.",
+      "source": "https://ahrefs.com/blog/llmstxt-study/"
+    },
+    {
+      "date": "2026-05",
+      "platform": "chatgpt",
+      "impact": "medium",
+      "title": "ChatGPT starts inline brand links in answers",
+      "summary": "ChatGPT began linking brand names inside answers to their websites, narrowing the referral-traffic gap between AI answers and classic organic search.",
+      "for_b2b": "Being named in the answer now carries a click path. AI visibility is measurable traffic, not just brand exposure.",
+      "source": "https://www.seoworks.co.uk/downloads/ai-referral-traffic-benchmark/"
+    },
+    {
+      "date": "2026-03-20",
+      "platform": "google-ai",
+      "impact": "high",
+      "title": "Google-Agent user agent added to Google's crawler documentation",
+      "summary": "Google added the Google-Agent user agent — used by agents hosted on Google infrastructure to navigate the web and perform actions upon user request — with IP ranges published in user-triggered-agents.json. As a user-triggered fetcher it generally ignores robots.txt.",
+      "for_b2b": "Agentic visits to your site now have an official, verifiable identity. Your WAF — not robots.txt — decides whether Google's buying agents get in.",
+      "source": "https://developers.google.com/crawling/docs/changelog"
+    }
+  ],
+  "stats": [
+    {
+      "stat": "Overlap between AI citations and Google top-10",
+      "value": "~12%",
+      "as_of": "2025",
+      "source": "https://www.frase.io/blog/which-ai-engines-cite-which-sources"
+    },
+    {
+      "stat": "Identical prompts returning the same brand list",
+      "value": "< 1 in 100 runs",
+      "as_of": "2026-01",
+      "source": "https://sparktoro.com/blog/new-research-ais-are-highly-inconsistent-when-recommending-brands-or-products-marketers-should-take-care-when-tracking-ai-visibility/"
+    },
+    {
+      "stat": "Published llms.txt files never fetched by any AI bot",
+      "value": "97%",
+      "as_of": "2026-06",
+      "source": "https://ahrefs.com/blog/llmstxt-study/"
+    },
+    {
+      "stat": "Correlation: YouTube mentions ↔ AI visibility",
+      "value": "~0.737",
+      "as_of": "2025-12",
+      "source": "https://ahrefs.com/blog/ai-brand-visibility-correlations/"
+    },
+    {
+      "stat": "Correlation: page count ↔ AI visibility",
+      "value": "~0.194 (near zero)",
+      "as_of": "2025-12",
+      "source": "https://ahrefs.com/blog/ai-brand-visibility-correlations/"
+    },
+    {
+      "stat": "AI search share of Ahrefs' traffic vs share of signups",
+      "value": "0.5% → 12.2%",
+      "as_of": "2025",
+      "source": "https://www.ahrefs.com/blog/ai-search-traffic-conversions-ahrefs"
+    },
+    {
+      "stat": "LLM referral click-through vs classic search",
+      "value": "~1.66% vs ~0.15%",
+      "as_of": "2025-11",
+      "source": "https://clarity.microsoft.com/blog/ai-traffic-converts-at-3x-the-rate-of-other-channels-study/"
+    },
+    {
+      "stat": "AI referrals vs organic search volume (95 sites)",
+      "value": "≈ 1/39th, narrowing since May 2026",
+      "as_of": "2026",
+      "source": "https://www.seoworks.co.uk/downloads/ai-referral-traffic-benchmark/"
+    },
+    {
+      "stat": "Correlation: branded web mentions ↔ AI Overview visibility",
+      "value": "0.664",
+      "as_of": "2025-05",
+      "source": "https://ahrefs.com/blog/ai-overview-brand-correlation/"
+    }
+  ]
+}
