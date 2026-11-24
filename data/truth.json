@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "sweep_id": 1,
+  "sweep_id": 2,
   "sweep_date": "2026-11-23",
-  "sweep_note": "Sweep #1 — board seeded from 15 primary sources (peer-reviewed studies, large-N industry studies, official engine docs), plus the Nov 17 2026 Google-Agent guidance and the Oct 30 2026 Anthropic training-signal change. Every claim carries its source URL.",
+  "sweep_note": "Sweep #2 - deep-research pass: platform models refreshed (GPT-6 family, Gemini 4 Hydrogen, Claude 5.5 family), crawler tokens completed, 16 dated platform changes added, 5 new tactics (freshness, JS rendering, Bing indexation, first-party reports, press+Wikipedia), Reddit verdict re-cut after the Aug 2026 citation collapse. Every claim carries its source URL.",
   "site_hint": "https://aisearchos.com/truth-engine",
   "platforms": [
     {
@@ -10,7 +10,7 @@
       "name": "ChatGPT",
       "vendor": "OpenAI",
       "engine": "Live web search inside ChatGPT; retrieval over an index that behaves like Bing's system.",
-      "current_model": "GPT-5 family model with live search (exact point release re-checked in every weekly sweep).",
+      "current_model": "GPT-6 family (Sol/Astra on paid tiers; free tier on GPT-5.6 Luna); search grounded on Bing infrastructure.",
       "crawlers": [
         {
           "token": "GPTBot",
@@ -18,15 +18,19 @@
         },
         {
           "token": "OAI-SearchBot",
-          "purpose": "Live search index — controls whether your pages can be retrieved and cited in answers."
+          "purpose": "Live search index; controls whether pages can be cited in answers. IP ranges at openai.com/searchbot.json."
         },
         {
           "token": "ChatGPT-User",
           "purpose": "On-demand fetch, fires when a user asks ChatGPT to open your page."
+        },
+        {
+          "token": "OAI-AdsBot",
+          "purpose": "Ad landing-page validation; respects robots.txt."
         }
       ],
-      "cites": "Cites fewer sources per answer but absorbs what it cites more deeply — definitions, numbers, comparisons and procedures get lifted into the answer text.",
-      "field_notes": "Weakest link to classic authority metrics of all major engines — the most open surface for lesser-known brands. Source mix shifts abruptly: Reddit citation share reportedly fell from ~60% to ~10% within a month in 2025 (Semrush).",
+      "cites": "Cites fewer sources per answer but absorbs what it cites more deeply — definitions, numbers, comparisons and procedures get lifted into the answer text. October 2026: citations per answer dropped ~40% (8.99→5.43), inline links rose sharply (0.18→2.81).",
+      "field_notes": "Weakest link to classic authority metrics of all major engines — the most open surface for lesser-known brands. Source mix shifts abruptly: Reddit citation share collapsed 86-94% in Aug 2026. Bing indexing is the practical gateway: pages absent from Bing rarely cited.",
       "sources": [
         {
           "label": "Citation vs absorption study (arXiv 2604.25707)",
@@ -37,8 +41,8 @@
           "url": "https://ahrefs.com/blog/ai-brand-visibility-correlations/"
         },
         {
-          "label": "OpenAI bot documentation",
-          "url": "https://platform.openai.com/docs/bots"
+          "label": "OpenAI bots documentation",
+          "url": "https://developers.openai.com/api/docs/bots"
         }
       ],
       "last_verified": "2026-11-23"
@@ -48,7 +52,7 @@
       "name": "Google AI Overviews & AI Mode",
       "vendor": "Google",
       "engine": "Answers grounded in Google Search — the consensus engine.",
-      "current_model": "Gemini family, grounded in the live Google Search index (exact version re-checked weekly).",
+      "current_model": "Gemini 4 Hydrogen (default for AI Mode since 2026-11-12); paid tiers add Argon/Carbon.",
       "crawlers": [
         {
           "token": "Googlebot",
@@ -56,16 +60,20 @@
         },
         {
           "token": "Google-Extended",
-          "purpose": "Controls whether Gemini Apps (the assistant) may use your content for grounding and training."
+          "purpose": "Controls Gemini Apps / Vertex AI grounding and training. Does NOT affect Search, AI Overviews or AI Mode."
         },
         {
           "token": "Google-Agent",
           "purpose": "User-triggered agent fetcher — Google-hosted agents navigate the web and act on user request (search, filter, add-to-cart, booking). Generally ignores robots.txt; allow at CDN/WAF level. Uses user-triggered-agents.json IP ranges, which do not overlap Googlebot's.",
           "new": true
+        },
+        {
+          "token": "GoogleOther",
+          "purpose": "Generic R&D crawler; respects robots.txt."
         }
       ],
-      "cites": "Rewards established brand signal hardest of all engines measured — branded anchors 0.628, branded search volume 0.466. Wikipedia, YouTube, Reddit and .gov sources over-indexed.",
-      "field_notes": "AI Mode is the most consensus-driven surface measured: it favors brands the rest of the web already agrees on. Hardest engine for unknown brands; still the one with the most measurable levers.",
+      "cites": "Rewards established brand signal hardest of all engines measured — branded anchors 0.628, branded search volume 0.466. Wikipedia, YouTube, Reddit and .gov sources over-indexed. Inline links substantially increased Oct 15 2026; prominent article carousels for timely content.",
+      "field_notes": "AI Mode is the most consensus-driven surface measured: it favors brands the rest of the web already agrees on. Hardest engine for unknown brands; still the one with the most measurable levers. Generative AI performance report in Search Console (since Aug 31 2026) shows impressions for AI Overviews + AI Mode combined.",
       "sources": [
         {
           "label": "Ahrefs 75k-brand correlation study, Dec 2022",
@@ -82,6 +90,14 @@
         {
           "label": "Google crawling docs changelog",
           "url": "https://developers.google.com/crawling/docs/changelog"
+        },
+        {
+          "label": "Allow Google-Agent traffic (Google)",
+          "url": "https://developers.google.com/crawling/docs/crawlers-fetchers/allow-google-agent"
+        },
+        {
+          "label": "Gemini 4 Hydrogen in Search",
+          "url": "https://blog.google/products-and-platforms/products/search/gemini-4-hydrogen-search-upgrade/"
         }
       ],
       "last_verified": "2026-11-23"
@@ -91,7 +107,7 @@
       "name": "Perplexity",
       "vendor": "Perplexity AI",
       "engine": "Answer engine with its own crawler and index, plus an agentic browser (Comet).",
-      "current_model": "Sonar model family (exact version re-checked weekly).",
+      "current_model": "Consumer default 'Best' picks per query; paid tiers host GPT-6.2, Gemini 4, Claude 5.5, Grok 4.7 and more. Sonar remains on the Agent API.",
       "crawlers": [
         {
           "token": "PerplexityBot",
@@ -102,8 +118,8 @@
           "purpose": "Fetches a page when a user's question needs it, and links it in the answer. User-requested, so generally ignores robots.txt."
         }
       ],
-      "cites": "Breadth-first citation style with numbered sources; community and technical sources over-indexed; strong grounding discipline — most likely to show the raw source list.",
-      "field_notes": "Community and technical sources over-index. The engine most likely to cite a niche industrial blog if it genuinely answers the question.",
+      "cites": "Breadth-first citation style with numbered sources; community and technical sources over-indexed; strong grounding discipline — most likely to show the raw source list. ~21.7 citations per answer. 65% of cited pages updated within 1 year.",
+      "field_notes": "Community and technical sources over-index. The engine most likely to cite a niche industrial blog if it genuinely answers the question. Agent API effort levels (fast, low, medium, high, xhigh, ultra-preview) affect citation format. Computer/Teammates agents for ongoing work.",
       "sources": [
         {
           "label": "Perplexity bots documentation",
@@ -112,6 +128,10 @@
         {
           "label": "Citation vs absorption study (arXiv 2604.25707)",
           "url": "https://arxiv.org/abs/2604.25707"
+        },
+        {
+          "label": "Perplexity changelog",
+          "url": "https://docs.perplexity.ai/docs/resources/changelog"
         }
       ],
       "last_verified": "2026-11-23"
@@ -121,7 +141,7 @@
       "name": "Claude",
       "vendor": "Anthropic",
       "engine": "Assistant with a server-side web search tool; leans on curated documentation.",
-      "current_model": "Claude 4.x family (exact version re-checked weekly).",
+      "current_model": "Claude 5.5 family (Opus 5.5, Sonnet 5.5, Haiku 5.5); Fable 5.2 and Mythos 5.2 added 2026-11-09; Opus 4.5 retires 2027-01-22.",
       "crawlers": [
         {
           "token": "ClaudeBot",
@@ -137,16 +157,20 @@
           "new": true
         }
       ],
-      "cites": "Most cautious citation posture of the major engines; prefers curated, documentation-style sources over forum content.",
-      "field_notes": "If your content reads like clean documentation — precise names, versions, specs, procedures — Claude retrieves and follows it well. Anthropic also operates Claude-Agent, a browser that visits sites on a user's behalf (Claude Duet).",
+      "cites": "Most cautious citation posture of the major engines; prefers curated, documentation-style sources over forum content. ~9.7 citations per answer. Cites Wikipedia in 47.5% of answers. Reddit citations effectively 0%. Three search subprocessors: Brave Search, TurboPuffer, Parallel Web Systems (ShapBot, added Oct 15 2026).",
+      "field_notes": "If your content reads like clean documentation — precise names, versions, specs, procedures — Claude retrieves and follows it well. 'No AI training' preference signal now recognized in robots.txt (Oct 30 2026). Blocking ClaudeBot only affects training; blocking Claude-User or Claude-SearchBot reduces search visibility.",
       "sources": [
         {
           "label": "Anthropic crawlers documentation",
-          "url": "https://support.claude.com/en/articles/8896518-does-anthropic-crawl-data-from-the-web-and-how-can-site-owners-block-the-crawler"
+          "url": "https://support.anthropic.com/en/articles/8896518-does-anthropic-crawl-data-from-the-web-and-how-can-site-owners-block-the-crawler"
         },
         {
           "label": "Citation vs absorption study (arXiv 2604.25707)",
           "url": "https://arxiv.org/abs/2604.25707"
+        },
+        {
+          "label": "Claude model docs",
+          "url": "https://platform.claude.com/docs/en/models/overview"
         }
       ],
       "last_verified": "2026-11-23"
@@ -156,15 +180,15 @@
       "name": "Microsoft Copilot",
       "vendor": "Microsoft",
       "engine": "Bing generative search — answers grounded in the Bing index.",
-      "current_model": "OpenAI GPT-5 family model, customized for Bing (exact version re-checked weekly).",
+      "current_model": "Consumer Copilot: GPT-5 family via Smart router. M365 Copilot: GPT-6.2 Sol worldwide since 2026-11-20. Bing AI surfaces rebranded: AI Mode + AI Overview.",
       "crawlers": [
         {
           "token": "bingbot",
           "purpose": "The Bing index — feeds both classic Bing results and Copilot answers."
         }
       ],
-      "cites": "Cites web sources with inline links, drawing on Bing ranking signals.",
-      "field_notes": "Because it rides the Bing index, classic Bing SEO (clean markup, submit via Bing Webmaster Tools) still moves Copilot answers more directly than any 'AI-specific' trick.",
+      "cites": "AI Overview: short sourced summary atop the SERP. AI Mode: conversational with inline citation chips. Retrieval rides the Bing index; IndexNow recommended.",
+      "field_notes": "Because it rides the Bing index, classic Bing SEO (clean markup, submit via Bing Webmaster Tools) still moves Copilot answers more directly than any 'AI-specific' trick. Two distinct experiences since Nov 2026: AI Mode (conversational) and AI Overview (quick summary). Microsoft recommends IndexNow for freshness. Ads in AI Overviews all markets except China (Nov 19 2026).",
       "sources": [
         {
           "label": "Bing Webmaster Tools",
@@ -173,6 +197,10 @@
         {
           "label": "Microsoft Clarity AI-traffic study, Nov 2025",
           "url": "https://clarity.microsoft.com/blog/ai-traffic-converts-at-3x-the-rate-of-other-channels-study/"
+        },
+        {
+          "label": "Bing AI Mode rebrand (SEW)",
+          "url": "https://searchenginewatch.com/bing-ai-mode-official-copilot-search-ai-overview"
         }
       ],
       "last_verified": "2026-11-23"
@@ -207,6 +235,11 @@
           "claim": "Google's own AI-search guidance lists llms.txt under myths; no engine documents reading it.",
           "source": "https://aiwebpageseo.com/blog/is-llms-txt-actually-used",
           "date": "2026"
+        },
+        {
+          "claim": "Google explicitly states: 'You don't need to create new machine readable files... Google Search ignores them.' June 2026 clarification: llms.txt 'will neither harm nor help your visibility or rankings in Google Search, as Google Search ignores them.'",
+          "source": "https://developers.google.com/search/docs/fundamentals/ai-optimization-guide",
+          "date": "2026-06-15"
         }
       ],
       "per_platform": {
@@ -216,7 +249,7 @@
         },
         "google-ai": {
           "v": "no-effect",
-          "note": "Google lists it under myths."
+          "note": "Google lists it under myths; June 2026 clarification confirms neither harms nor helps."
         },
         "perplexity": {
           "v": "no-effect",
@@ -297,12 +330,12 @@
       "one_liner": "The single strongest measured correlate of AI visibility across engines.",
       "evidence": [
         {
-          "claim": "YouTube mentions correlate ~0.875 with AI visibility — the strongest single factor across ChatGPT, AI Mode and AI Overviews.",
+          "claim": "YouTube mentions correlate ~0.737 with AI visibility — the strongest single factor across ChatGPT, AI Mode and AI Overviews.",
           "source": "https://ahrefs.com/blog/ai-brand-visibility-correlations/",
           "date": "2025-12"
         },
         {
-          "claim": "YouTube is among the most-cited sources on Google's AI surfaces.",
+          "claim": "YouTube is among the most-cited sources on Google's AI surfaces (63% of AI Overviews, 76% in Babel42 Nov 2026 study).",
           "source": "https://ahrefs.com/blog/ai-brand-visibility-correlations/",
           "date": "2025-12"
         }
@@ -333,6 +366,11 @@
         {
           "claim": "Stats/credibility markers confirmed as citation-likelihood factors in follow-up multi-objective work.",
           "source": "https://aclanthology.org/2026.acl-long.929.pdf",
+          "date": "2026"
+        },
+        {
+          "claim": "Pages with 19+ discrete statistics averaged 5.4 citations vs 2.4 without; expert quotes 4.1 vs 2.4 (SE Ranking, 129K domains).",
+          "source": "https://www.rankability.com/blog/ai-search-statistics/",
           "date": "2026"
         }
       ],
@@ -413,6 +451,11 @@
           "claim": "Topical relevance and context position are the most reproducible levers in a 45-study survey of GEO research.",
           "source": "https://arxiv.org/abs/2607.14035",
           "date": "2026"
+        },
+        {
+          "claim": "72.4% of cited posts open with a direct answer; citation rate falls from 79.6% at retrieval rank 1 to 21.5% at rank 11+ (Ahrefs, 1.4M prompts, Feb 2026).",
+          "source": "https://sightivo.com/how-to-get-cited-by-chatgpt",
+          "date": "2026-02"
         }
       ],
       "per_platform": {
@@ -450,6 +493,11 @@
           "claim": "No answer engine documents AI-specific markup requirements; structured data still helps rich results and entity disambiguation — which is regular SEO, not a new switch.",
           "source": "https://www.montrelia.com/geo-aeo-llms-txt-claims-checked",
           "date": "2026"
+        },
+        {
+          "claim": "Google: structured data is not required for generative AI search. Bing: it may support clearer grounding but does not guarantee visibility.",
+          "source": "https://developers.google.com/search/docs/fundamentals/ai-optimization-guide",
+          "date": "2026-05"
         }
       ],
       "industrial_note": "Keep your schema.org Product/Organization markup correct — it feeds entity understanding. But nobody accepts 'AI schema' as a deliverable; there is no such standard to implement.",
@@ -530,6 +578,16 @@
           "claim": "LLM search engines cite different sources from Google/Bing, on top of what is already covered or missing in the original index.",
           "source": "https://arxiv.org/pdf/2512.09483",
           "date": "2025"
+        },
+        {
+          "claim": "46% of sites cited in AI Overviews do not rank in Google's top-10 for the query.",
+          "source": "https://ahrefs.com/blog/ai-overview-citations-top-10/",
+          "date": "2026"
+        },
+        {
+          "claim": "72.8% of ChatGPT-cited pages have zero page-level referring domains.",
+          "source": "https://www.rankability.com/blog/ai-search-statistics/",
+          "date": "2026"
         }
       ],
       "industrial_note": "Do the classic basics — they feed retrieval everywhere. Then measure AI visibility separately, because it will not follow automatically.",
@@ -547,7 +605,7 @@
       ],
       "category": "Off-site",
       "verdict": "mixed",
-      "one_liner": "Heavily cited by Google surfaces — but ChatGPT's Reddit share collapsed, and engineered mentions are now a crackdown target.",
+      "one_liner": "Google and Perplexity still lean on it; ChatGPT collapsed in Aug 2026. Engine-by-engine, never fabricated.",
       "evidence": [
         {
           "claim": "Reddit is among the most-cited sources across Google's AI surfaces.",
@@ -563,20 +621,30 @@
           "claim": "Google's guidance warns that seeking inauthentic mentions 'isn't as helpful as it might seem' — operators can discount fabrications.",
           "source": "https://www.montrelia.com/geo-aeo-llms-txt-claims-checked",
           "date": "2026"
+        },
+        {
+          "claim": "ChatGPT Reddit citations collapsed 86-94% in August 2026 (from ~8-21% to ~0.1-3.3% of answers); multiple independent trackers confirmed the cliff.",
+          "source": "https://www.searchable.com/data/what-replaced-reddit-in-chatgpt",
+          "date": "2026-08-08"
+        },
+        {
+          "claim": "ChatGPT Reddit citations collapsed 86-94% in August 2026 (from ~8-21% to ~0.1-3.3% of answers).",
+          "source": "https://www.searchable.com/data/what-replaced-reddit-in-chatgpt",
+          "date": "2026-08"
         }
       ],
       "per_platform": {
         "google-ai": {
           "v": "working",
-          "note": "Reddit over-cited on Google surfaces."
+          "note": "Reddit over-cited on Google surfaces (+16% Jul-Sep 2026)."
         },
         "chatgpt": {
-          "v": "mixed",
-          "note": "Share collapsed in 2025; treat as volatile."
+          "v": "not-working",
+          "note": "Citations collapsed 86-94% in Aug 2026."
         },
         "perplexity": {
           "v": "working",
-          "note": "Community sources surface strongly."
+          "note": "Community sources surface strongly (+86% Jul-Sep 2026)."
         }
       },
       "industrial_note": "Answering real questions in r/manufacturing builds mentions that survive. Paying for thread drops is now actively risky — Google is cracking down, and buyers can smell it too.",
@@ -622,26 +690,35 @@
       ],
       "category": "Off-site",
       "verdict": "working",
-      "one_liner": "Wikipedia and similar reference sources are over-cited by Google's AI surfaces.",
+      "one_liner": "Wikipedia and similar reference sources are over-cited by Google's AI surfaces; engine dependence is extreme.",
       "evidence": [
         {
           "claim": "Wikipedia, YouTube and Reddit are heavily cited by Google AI surfaces; .gov over-indexed.",
           "source": "https://ahrefs.com/blog/ai-brand-visibility-correlations/",
           "date": "2025-12"
+        },
+        {
+          "claim": "Per-engine Wikipedia citation shares: Claude ~47.5%, AI Overviews ~19.4%, Perplexity ~23.1%, ChatGPT ~2.7% (Tonecast API study, Suff Digital Sep 2026).",
+          "source": "https://www.suffdigital.com/resources/data-studies/wikipedia-share-chatgpt-answers",
+          "date": "2026-09"
         }
       ],
       "per_platform": {
         "google-ai": {
           "v": "working",
-          "note": "Heavily cited."
+          "note": "Heavily cited (~19.4% of answers cite Wikipedia)."
         },
         "chatgpt": {
           "v": "mixed",
-          "note": "Training-era knowledge carries over; verify in weekly sweeps."
+          "note": "Training-era knowledge carries over; verify in weekly sweeps (only ~2.7% of answers)."
         },
         "perplexity": {
           "v": "mixed",
-          "note": "Reference-style sources surface in technical queries."
+          "note": "Reference-style sources surface in technical queries (~23.1%)."
+        },
+        "claude": {
+          "v": "working",
+          "note": "Highest citation share across engines (~47.5%)."
         }
       },
       "industrial_note": "Notability rules make a company page unlikely, but Wikidata entries, category definitions and industry-association pages you appear on are reachable — and read.",
@@ -784,36 +861,240 @@
       "industrial_note": "The shortlist is starting to be machine-read: clean spec tables, schema.org Product/Offer markup, crawlable availability. If an agent can't parse your catalog, it can't shortlist you.",
       "confidence": "medium",
       "last_verified": "2026-11-23"
+    },
+    {
+      "id": "bing-indexing",
+      "name": "Bing indexing as the ChatGPT gateway",
+      "aliases": [
+        "bing index",
+        "bing webmaster tools",
+        "indexnow chatgpt"
+      ],
+      "category": "Technical",
+      "verdict": "working",
+      "one_liner": "Bing is the practical gateway to ChatGPT citations — pages absent from Bing rarely get cited.",
+      "evidence": [
+        {
+          "claim": "Seer Interactive: 87% of ChatGPT citations matched Bing top-20; recommend Bing Webmaster Tools + IndexNow.",
+          "source": "https://aiviara.com/learn/getting-cited-by-chatgpt",
+          "date": "2026-02"
+        },
+        {
+          "claim": "Kevin Indig (Mar 2026): Google rank #1 pages cited 43.2% vs 3.5x lower beyond top 20; Bing indexation strongly predicts ChatGPT citation.",
+          "source": "https://searchengineland.com/chatgpt-citations-change-hidden-search-pipelines-481843",
+          "date": "2026-03"
+        }
+      ],
+      "per_platform": {
+        "chatgpt": {
+          "v": "working",
+          "note": "Primary retrieval index; verify indexation via Bing Webmaster Tools, submit via IndexNow."
+        }
+      },
+      "industrial_note": "If your site isn't in Bing, ChatGPT won't cite it. Add to Bing Webmaster Tools, submit sitemap, enable IndexNow for fresh content.",
+      "confidence": "high",
+      "last_verified": "2026-11-23"
+    },
+    {
+      "id": "freshness",
+      "name": "Fresh, dated content",
+      "aliases": [
+        "content freshness",
+        "updated content",
+        "recency"
+      ],
+      "category": "Content",
+      "verdict": "working",
+      "one_liner": "AI engines strongly prefer recently updated content — median cited pages are months, not years, old.",
+      "evidence": [
+        {
+          "claim": "73% of ChatGPT-cited pages updated within 1 year (Seer Interactive, Jul 2026).",
+          "source": "https://www.seerinteractive.com/insights/study-content-recencys-impact-on-ai-visibility-in-2026",
+          "date": "2026-07"
+        },
+        {
+          "claim": "AI Overviews median cited page updated ~88 days ago; 87% within past year (AI Ranked, Oct 2026).",
+          "source": "https://www.airanked.ai/research/content-freshness-ai-overviews",
+          "date": "2026-10"
+        },
+        {
+          "claim": "OtterlyAI experiment (Sep 2026): updating only publication date on 10 articles increased citations 31.5% in 30 days (ChatGPT +692%, Claude +87%, Perplexity +217%).",
+          "source": "https://otterly.ai/blog/publication-date-ai-citations-experiment/",
+          "date": "2026-09"
+        }
+      ],
+      "per_platform": {
+        "chatgpt": {
+          "v": "working",
+          "note": "Strongest freshness bias (958 days avg age of cited content vs 1,432 for non-cited)."
+        },
+        "google-ai": {
+          "v": "working",
+          "note": "Median AI Overview cited page 88 days old; 87% within year."
+        },
+        "perplexity": {
+          "v": "working",
+          "note": "65% of cited pages updated within 1 year."
+        },
+        "claude": {
+          "v": "working",
+          "note": "Freshness matters for search citations."
+        }
+      },
+      "industrial_note": "Update publication dates when content is substantively refreshed. Google warns against date-only changes. Add real new data, specs, or comparisons — engines detect shallow updates.",
+      "confidence": "high",
+      "last_verified": "2026-11-23"
+    },
+    {
+      "id": "first-party-reports",
+      "name": "First-party AI visibility reports",
+      "aliases": [
+        "generative ai report",
+        "search console ai",
+        "bing webmaster ai performance",
+        "chatgpt business hub"
+      ],
+      "category": "Strategy",
+      "verdict": "working",
+      "one_liner": "Native platform reports now exist — Search Console Generative AI, Bing WMT AI Performance, ChatGPT Business Hub.",
+      "evidence": [
+        {
+          "claim": "Google Search Console Generative AI performance report launched Jun 3 2026; rolled out to all sites Aug 31 2026. Shows AI Overviews + AI Mode impressions by page, country, date, device.",
+          "source": "https://support.google.com/webmasters/answer/16984139",
+          "date": "2026-08-31"
+        },
+        {
+          "claim": "Bing Webmaster Tools AI Performance report (added Jun 16, 2026) tracks Total Citations, Citation Share, Intents, Topics, grounding queries for Copilot.",
+          "source": "https://indexly.ai/insights/how-microsoft-copilot-citations-work-sep-2026",
+          "date": "2026-06-16"
+        },
+        {
+          "claim": "ChatGPT Business Hub beta launched Nov 10 2026: verified businesses see mentions, website clicks, discovery topics, profile views (aggregated 28-day data).",
+          "source": "https://help.openai.com/en/articles/20001202",
+          "date": "2026-11-10"
+        }
+      ],
+      "per_platform": {
+        "google-ai": {
+          "v": "working",
+          "note": "Search Console Generative AI report: impressions only (no clicks, CTR, position) for AI Overviews + AI Mode combined."
+        },
+        "copilot": {
+          "v": "working",
+          "note": "Bing WMT AI Performance report: Citation Share, Intents, Topics, grounding queries."
+        },
+        "chatgpt": {
+          "v": "working",
+          "note": "ChatGPT Business Hub: mentions, clicks, discovery topics (threshold-gated, 28-day aggregation)."
+        }
+      },
+      "industrial_note": "Claim all three dashboards. They are the only first-party citation/visibility signals available. Set up alerts for citation drops.",
+      "confidence": "high",
+      "last_verified": "2026-11-23"
+    },
+    {
+      "id": "press-wikipedia",
+      "name": "Press + Wikipedia citations for ChatGPT",
+      "aliases": [
+        "news citations",
+        "wikipedia citations",
+        "major news"
+      ],
+      "category": "Off-site",
+      "verdict": "working",
+      "one_liner": "Major news and Wikipedia dominate ChatGPT's citation mix — together ~36% of sources.",
+      "evidence": [
+        {
+          "claim": "Presenc AI Q1 2026 (5,200 responses): major news (NYT, WSJ, Reuters, BBC, Bloomberg, AP) ~22% and Wikipedia ~14% of ChatGPT citation mix.",
+          "source": "https://presenc.ai/research/chatgpt-citation-patterns-2026",
+          "date": "2026-03"
+        },
+        {
+          "claim": "Conductor 7-month study: ChatGPT Search prefers Wikipedia across Education, Recommendations, Comparison, Purchase intents consistently.",
+          "source": "https://www.conductor.com/academy/how-ai-citations-differ",
+          "date": "2026"
+        }
+      ],
+      "per_platform": {
+        "chatgpt": {
+          "v": "working",
+          "note": "News 22% + Wikipedia 14% of citation mix; Conductor confirms Wikipedia preference across intents."
+        }
+      },
+      "industrial_note": "PR that lands in tier-1 business/tech press directly feeds ChatGPT citations. Wikipedia notability is hard but industry category pages and Wikidata are reachable.",
+      "confidence": "high",
+      "last_verified": "2026-11-23"
+    },
+    {
+      "id": "js-rendering",
+      "name": "JavaScript-only content",
+      "aliases": [
+        "javascript",
+        "js rendering",
+        "client-side rendering",
+        "spa"
+      ],
+      "category": "Technical",
+      "verdict": "conditional",
+      "one_liner": "OpenAI, Anthropic and Perplexity crawlers do not execute JavaScript; client-side content is invisible to them. Googlebot is the exception.",
+      "evidence": [
+        {
+          "claim": "AI crawlers fetch JS files but do not execute them; 92.5% of AI-cited pages expose content without JS rendering.",
+          "source": "https://katman.pro/do-ai-crawlers-render-javascript",
+          "date": "2026-10"
+        }
+      ],
+      "per_platform": {
+        "google-ai": {
+          "v": "conditional",
+          "note": "Googlebot renders JS."
+        },
+        "chatgpt": {
+          "v": "not-working",
+          "note": "Fetches but does not execute."
+        },
+        "perplexity": {
+          "v": "not-working",
+          "note": "Fetches but does not execute."
+        },
+        "claude": {
+          "v": "not-working",
+          "note": "Fetches but does not execute."
+        }
+      },
+      "industrial_note": "If your catalog is a client-side React app, the engines read an empty shell. Server-render spec sheets and product pages.",
+      "confidence": "medium",
+      "last_verified": "2026-11-23"
     }
   ],
   "myths": [
     {
-      "claim": "“You need llms.txt to be cited by AI.”",
-      "reality": "97% of published llms.txt files are never fetched by any AI bot, and no effect on citations was found across ~300k domains. Google's own docs list it under myths.",
+      "claim": "\"You need llms.txt to be cited by AI.\"",
+      "reality": "97% of published llms.txt files are never fetched by any AI bot, and no effect on citations was found across ~300k domains. Google's own docs list it under myths; June 2026 clarification: 'will neither harm nor help your visibility or rankings in Google Search.'",
       "source": "https://ahrefs.com/blog/llmstxt-study/"
     },
     {
-      "claim": "“You need special AI schema markup.”",
+      "claim": "\"You need special AI schema markup.\"",
       "reality": "No engine documents AI-specific markup. Regular structured data helps entity understanding and rich results — that's classic SEO, not a new standard.",
       "source": "https://www.montrelia.com/geo-aeo-llms-txt-claims-checked"
     },
     {
-      "claim": "“We can guarantee you #1 in ChatGPT.”",
+      "claim": "\"We can guarantee you #1 in ChatGPT.\"",
       "reality": "Identical prompts return the same brand list in under 1 of 100 runs. Non-deterministic answers make guarantees impossible — and single screenshots meaningless.",
       "source": "https://sparktoro.com/blog/new-research-ais-are-highly-inconsistent-when-recommending-brands-or-products-marketers-should-take-care-when-tracking-ai-visibility/"
     },
     {
-      "claim": "“Rank on Google and the AI will follow.”",
+      "claim": "\"Rank on Google and the AI will follow.\"",
       "reality": "Only ~12% of AI-cited URLs also rank in Google's top-10. AI visibility has its own scoreboard and must be measured separately.",
       "source": "https://www.frase.io/blog/which-ai-engines-cite-which-sources"
     },
     {
-      "claim": "“More pages = more AI visibility.”",
+      "claim": "\"More pages = more AI visibility.\"",
       "reality": "Page count correlates near-zero (0.194) with AI visibility, and scaled query-targeting content is spam-policy territory.",
       "source": "https://ahrefs.com/blog/ai-brand-visibility-correlations/"
     },
     {
-      "claim": "“Buy our citation package — 50 AI mentions, guaranteed.”",
+      "claim": "\"Buy our citation package — 50 AI mentions, guaranteed.\"",
       "reality": "Engine operators can discount fabricated mentions, and Google's guidance is blunt that inauthentic mentions aren't as helpful as they might seem.",
       "source": "https://www.montrelia.com/geo-aeo-llms-txt-claims-checked"
     }
@@ -822,59 +1103,239 @@
     {
       "date": "2026-11-23",
       "platform": "google-ai",
+      "impact": "medium",
+      "title": "Personal Intelligence Apps in AI Mode (Wallet, Drive, Gemini App)",
+      "summary": "Starting rollout: opt-in to connect Google Wallet, Drive, Gemini app to Personal Intelligence in AI Mode (joining Gmail, Calendar, Photos). Wallet: spending analysis, credit card optimization. Drive: document context for personalized prep. Gemini app: cross-context sharing with Search.",
+      "for_b2b": "Personalized AI Mode answers will incorporate user's Drive docs, Wallet spending, Gemini chats. B2B sellers appearing in personalized contexts gain stickiness. Ensure content is structured for extraction into personal contexts.",
+      "source": "https://blog.google/products-and-platforms/products/search/google-search-personal-intelligence-apps/"
+    },
+    {
+      "date": "2026-11-23",
+      "platform": "claude",
       "impact": "low",
-      "title": "Google moves APIs-Google to user-triggered fetcher IP ranges",
-      "summary": "Per the crawling docs changelog: APIs-Google webhook pushes now come from user-triggered-fetcher IP ranges and, by classification, those ignore robots.txt rules.",
-      "for_b2b": "Crawl-doc housekeeping. Nothing to change for most sellers.",
-      "source": "https://developers.google.com/crawling/docs/changelog"
+      "title": "Claude Opus 4.5 Deprecated (Retires Jan 22, 2027)",
+      "summary": "Anthropic notified developers of Opus 4.5 retirement; recommended migration to Opus 5.5. Includes claude-opus-4-5 and claude-opus-4-5-20251101 IDs.",
+      "for_b2b": "Minimal direct impact; confirms Opus 5.5 as stable flagship for agentic work. Ensure any API integrations pinned to Opus 4.5 are migrated.",
+      "source": "https://platform.claude.com/docs/en/about-claude/model-deprecations"
+    },
+    {
+      "date": "2026-11-20",
+      "platform": "chatgpt",
+      "impact": "medium",
+      "title": "ChatGPT Space Rolling Out to Plus Users",
+      "summary": "ChatGPT Space (interactive pages/presentations with collaborative editing, auto-updates from connected apps) rolling out globally to Plus users 18+.",
+      "for_b2b": "New content format for B2B sellers: interactive proposals, living specs, collaborative client presentations. Connected apps auto-update enables live data feeds in shared Spaces.",
+      "source": "https://help.openai.com/en/articles/6825453-chatgpt-release-notes"
     },
     {
       "date": "2026-11-17",
       "platform": "google-ai",
+      "impact": "low",
+      "title": "Temporary Threads in AI Mode",
+      "summary": "Temporary threads now available in AI Mode globally (desktop/mobile, all languages). Sessions detached from account — no history, no personalization carryover, deleted on close.",
+      "for_b2b": "Minor direct impact. Signals Google's focus on privacy modes. May affect personalization-dependent citation patterns for users in temporary threads.",
+      "source": "https://blog.google/products-and-platforms/products/search/temporary-threads-ai-mode/"
+    },
+    {
+      "date": "2026-11-16",
+      "platform": "chatgpt",
       "impact": "high",
-      "title": "Google publishes 'Allow Google-Agent traffic' guide for CDNs and WAFs",
-      "summary": "Google documented how to let its AI agent through firewalls and bot detection: match the Google-Agent User-Agent header, verify against user-triggered-agents.json IP ranges (which do not overlap Googlebot's), optionally verify Web Bot Auth signatures, and skip CAPTCHAs and JS challenges for verified requests. The guide expects the agent to complete full journeys — on-site search, filtering, detail pages, add-to-cart, booking.",
-      "for_b2b": "If a buying agent can't complete a journey on your site — search, filter, open a product page, request a quote — you're not in its shortlist. 'Block AI agents' category rules in your WAF now have a documented, measurable cost.",
-      "source": "https://ppc.land/google-lists-six-ways-sites-still-block-its-ai-agent-after-allowing-it/"
+      "title": "GPT-6.2 Astra and GPT-6.2 Sol Released (Work, Codex, API)",
+      "summary": "GPT-6.2 Astra (frontier) and Sol (everyday) launch in ChatGPT Work, Codex, and API. Astra for hardest projects; Sol for coding, writing, multi-step workflows. Both support Ultrafast tier. Standard API: Astra $8/$40 per MTok, Sol $2/$10 per MTok.",
+      "for_b2b": "New top-tier models for Work/Codex automation. Astra's research synthesis across sources directly relevant to competitive intelligence, market analysis. Sol's cost efficiency enables scaling daily workflows.",
+      "source": "https://learn.chatgpt.com/docs/whats-new/gpt-62-astra-sol"
+    },
+    {
+      "date": "2026-11-12",
+      "platform": "google-ai",
+      "impact": "high",
+      "title": "Gemini 4 Hydrogen Becomes Default Model in AI Mode (Global); Used for Hardest AI Overviews",
+      "summary": "Gemini 4 Hydrogen now default in AI Mode for all users worldwide. Also used for 'hardest questions in AI Overviews.' Improvements: better intent understanding, improved query fan-out (broader links), more visual responses, richer multilingual support. Replaced Gemini 3.5 Flash.",
+      "for_b2b": "Citation patterns in AI Mode and difficult AI Overviews now reflect Hydrogen's fan-out and reasoning. Expect broader source diversity per answer. Content covering subtopics comprehensively gains advantage. Visual content more likely surfaced.",
+      "source": "https://blog.google/products-and-platforms/products/search/gemini-4-hydrogen-search-upgrade/"
+    },
+    {
+      "date": "2026-11-10",
+      "platform": "google-ai",
+      "impact": "high",
+      "title": "November 2026 Core Update Begins (Rolling up to 2 weeks)",
+      "summary": "Third core update of 2026 (after Mar 27-Apr 8 and May 21-Jun 2). Global, all languages. Google calls it 'regular update meant to better surface relevant, satisfying content from all types of sites.'",
+      "for_b2b": "Rankings may fluctuate Nov 10-24. Do not make reactive changes during rollout. Assess impact after completion. Overlaps with Gemini 4 Hydrogen launch — disentangle model change vs core update effects.",
+      "source": "https://www.semrush.com/blog/google-core-update-november-2026/"
+    },
+    {
+      "date": "2026-11-09",
+      "platform": "claude",
+      "impact": "high",
+      "title": "Claude Fable 5.2 and Mythos 5.2 Released",
+      "summary": "New top-tier models for demanding reasoning and long-horizon agentic work. 1M context, 128K output, adaptive thinking, 20% cheaper than 5.1 ($8/$40 per 1M). Fast mode 2.5x speed. Mythos 5.2 verification-gated.",
+      "for_b2b": "Fable 5.2 powers Claude's hardest reasoning (including web search). Complex B2B queries (RFP analysis, technical comparisons) will route here. Content must support multi-step verification.",
+      "source": "https://www.anthropic.com/claude-fable-and-mythos-5-2"
+    },
+    {
+      "date": "2026-11-04",
+      "platform": "perplexity",
+      "impact": "high",
+      "title": "Teammates Launch: Personal Agents for Complex Ongoing Work",
+      "summary": "Teammates coordinate Computer sessions, manage ongoing projects across ops/marketing/sales/finance, remember goals/history/files, proactive monitoring, Slack integration, cross-teammate handoffs. Initially Max only.",
+      "for_b2b": "Buyer-side Teammates will autonomously research vendors, track pricing, monitor renewals. Seller content must be agent-parseable: structured data, API-accessible specs, clear comparison matrices.",
+      "source": "https://www.perplexity.ai/hub/blog/teammates-are-agents-for-complex-ongoing-work"
+    },
+    {
+      "date": "2026-11-03",
+      "platform": "chatgpt",
+      "impact": "medium",
+      "title": "OpenAI Claims ChatGPT Search-like Queries at ~20% of Google Volume",
+      "summary": "Adam Fry (ChatGPT consumer product lead) stated: 'ChatGPT's volume of search-like queries is now roughly one-fifth the volume of queries of Google.' ChatGPT grew from 1B to 1.2B weekly users in two months. Unaudited, self-reported.",
+      "for_b2b": "ChatGPT is a meaningful search channel but referral traffic still tiny (0.36% vs Google 24.74% per Ahrefs). Measure brand presence in answers, not just referral clicks.",
+      "source": "https://www.searchenginejournal.com/googles-search-volume-is-about-5x-chatgpts-openai-says/595817/"
     },
     {
       "date": "2026-10-30",
-      "platform": "claude",
+      "platform": "copilot",
       "impact": "medium",
-      "title": "Anthropic begins honoring a 'no AI training' preference signal",
-      "summary": "Anthropic announced it recognizes a machine-readable signal letting site owners say 'no AI training' in robots.txt, rolling out globally across services over time. Directly-named ClaudeBot rules still take priority over the general signal.",
-      "for_b2b": " 'Cite me, don't train on me' is now an explicit, separate choice for Claude surfaces: Claude-SearchBot and Claude-User control visibility, the new signal controls training.",
-      "source": "https://support.claude.com/en/articles/8896518-does-anthropic-crawl-data-from-the-web-and-how-can-site-owners-block-the-crawler"
+      "title": "Clearer Publisher Preferences for Training and Grounding",
+      "summary": "Microsoft expands web publisher choice with independent preferences for training vs. grounding, building on shared industry training preference (no change to Bing search eligibility).",
+      "for_b2b": "Sellers can allow grounding (citations) while opting out of training. Use robots.txt/noarchive/nocache meta tags per Microsoft guidelines. IndexNow recommended for citation freshness.",
+      "source": "https://blogs.bing.com/search/2026/10/your-content-your-choice-clearer-preferences-for-training-and-grounding"
     },
     {
-      "date": "2026-06",
-      "platform": "ai",
+      "date": "2026-10-28",
+      "platform": "google-ai",
       "impact": "medium",
-      "title": "Ahrefs: 97% of llms.txt files never read",
-      "summary": "The largest llms.txt study (137k files) found 97% were never fetched by any AI bot — the definitive burial of the llms.txt 'citation lever' claim.",
-      "for_b2b": "Any deliverable line-itemed as 'llms.txt optimization' is padding. Ask for the robots.txt and per-bot access plan instead.",
-      "source": "https://ahrefs.com/blog/llmstxt-study/"
+      "title": "Ads in AI Mode Expand to 10 Countries",
+      "summary": "AI Mode ads scaling to Australia, Canada, India, Kenya, Malaysia, New Zealand, Nigeria, Pakistan, Philippines, Singapore (English only). Q4 2026 planned for Brazil, Mexico, UK. Multiturn ads launched in US for follow-up queries.",
+      "for_b2b": "New paid visibility channel in conversational search for 10 markets. Multiturn ads in US allow presence in follow-up questions. B2B sellers in target countries should test AI Mode ad formats.",
+      "source": "https://blog.google/products/ads-commerce/ads-in-ai-mode-global/"
     },
     {
-      "date": "2026-05",
+      "date": "2026-10-26",
       "platform": "chatgpt",
-      "impact": "medium",
-      "title": "ChatGPT starts inline brand links in answers",
-      "summary": "ChatGPT began linking brand names inside answers to their websites, narrowing the referral-traffic gap between AI answers and classic organic search.",
-      "for_b2b": "Being named in the answer now carries a click path. AI visibility is measurable traffic, not just brand exposure.",
-      "source": "https://www.seoworks.co.uk/downloads/ai-referral-traffic-benchmark/"
+      "impact": "high",
+      "title": "GPT-6.1 Terra in ChatGPT Work and Codex",
+      "summary": "GPT-6.1 Terra rolling out in ChatGPT Work and Codex (Plus, Pro, Business, Enterprise, Edu). Supports visual reasoning, computer use, writing. Standard API pricing: $1/M input, $0.05/M cached input, $5/M output.",
+      "for_b2b": "Computer use capability in Work/Codex enables browser-based workflow automation (competitor research, spec extraction, form filling). Terra's 3x speed advantage makes it cost-effective for high-volume tasks.",
+      "source": "https://developers.openai.com/api/docs/changelog"
     },
     {
-      "date": "2026-03-20",
+      "date": "2026-10-15",
       "platform": "google-ai",
       "impact": "high",
-      "title": "Google-Agent user agent added to Google's crawler documentation",
-      "summary": "Google added the Google-Agent user agent — used by agents hosted on Google infrastructure to navigate the web and perform actions upon user request — with IP ranges published in user-triggered-agents.json. As a user-triggered fetcher it generally ignores robots.txt.",
-      "for_b2b": "Agentic visits to your site now have an official, verifiable identity. Your WAF — not robots.txt — decides whether Google's buying agents get in.",
-      "source": "https://developers.google.com/crawling/docs/changelog"
+      "title": "AI Mode and AI Overviews: More Inline Links, Official Sites Section, Article Carousels, Creator Profiles",
+      "summary": "Substantial increases to inline links in AI answers; links shown higher up more frequently. Testing dedicated 'official sites' section at top of responses. Global rollout of prominent article carousels for timely content with Preferred Sources highlighting. Clickable creator/publisher names on video results in AI Mode.",
+      "for_b2b": "Higher inline link placement = more click opportunities. Official sites section favors authoritative domains. Article carousels benefit timely content. Creator profiles extend to B2B thought leadership video content.",
+      "source": "https://blog.google/products-and-platforms/products/search/updates-ai-mode-overviews-explore-web/"
+    },
+    {
+      "date": "2026-10-15",
+      "platform": "claude",
+      "impact": "medium",
+      "title": "Parallel Web Systems Added as Third Web Search Subprocessor",
+      "summary": "Anthropic Trust Center lists Parallel Web Systems (crawler: ShapBot) as web search subprocessor alongside Brave Search and TurboPuffer. Added Oct 15, 2026. Routing undisclosed.",
+      "for_b2b": "Claude's search index now draws from three providers. Visibility requires presence in Brave index, TurboPuffer vector DB, and Parallel's AI-scale index. Monitor all three.",
+      "source": "https://tofubofu.com/blog/what-search-engine-does-claude-use"
+    },
+    {
+      "date": "2026-10-07",
+      "platform": "chatgpt",
+      "impact": "high",
+      "title": "GPT-6 with Intelligent UI Launched",
+      "summary": "GPT-6 rollout with Intelligent UI: interactive answers including tappable buttons, custom calculators, editable charts. ChatGPT begins answering while still thinking/using tools. Powers GPT-6 Sol and GPT-6 Pro (Astra). Free/Go on GPT-5.6 Luna.",
+      "for_b2b": "Interactive elements (calculators, charts) in answers create new citation surfaces. B2B sellers with configurators/calculators may gain inline interactive citations. Monitor citation patterns for interactive vs static answers.",
+      "source": "https://everything-pr.com/ai-answer-engine-update-digest"
+    },
+    {
+      "date": "2026-09-29",
+      "platform": "chatgpt",
+      "impact": "high",
+      "title": "GPT-6.1 Sol and GPT-6.1 Terra Released (API, Work, Codex)",
+      "summary": "GPT-6.1 Sol for complex coding/professional work at lower cost than Astra; supports multi-agent beta. GPT-6.1 Terra for visual reasoning, computer use, writing — 50% lower API cost than GPT-5.6 Terra, surpasses GPT-5.6 Terra on Agents' Last Exam by 15pp at 1/3 cost.",
+      "for_b2b": "GPT-6.1 Terra's computer use + visual reasoning enables automating invoice processing, technical drawing interpretation, form filling. Lower cost makes high-volume automation practical.",
+      "source": "https://developers.openai.com/api/docs/changelog"
+    },
+    {
+      "date": "2026-09-24",
+      "platform": "google-ai",
+      "impact": "high",
+      "title": "September 2026 Spam Update (Sep 24 – Oct 8)",
+      "summary": "Global spam update, all languages, 13-day rollout (longest of 2026). Three waves of changes. Not targeting link spam or site reputation abuse. Targets scaled content abuse, cloaking, keyword stuffing, expired domain abuse. Recovery takes months.",
+      "for_b2b": "Audit for scaled/content abuse patterns. If rankings dropped Sep 24-Oct 8, compare against spam policies — not parasite SEO. Recovery requires demonstrating sustained compliance.",
+      "source": "https://www.semrush.com/blog/google-spam-update-september-2026/"
+    },
+    {
+      "date": "2026-09-14",
+      "platform": "chatgpt",
+      "impact": "high",
+      "title": "GPT-5.5 Retirement Announced (Effective Oct 14 2026)",
+      "summary": "OpenAI announced GPT-5.5 will retire from ChatGPT, ChatGPT Work, and Codex on October 14, 2026 across all plans. API unaffected. Users directed to update saved model settings, workspace defaults, custom agents, scheduled tasks, and scripts.",
+      "for_b2b": "Migration to GPT-6 family required for Work/Codex workflows. GPT-6.2 Astra/Sol now recommended for complex work. Update any hardcoded model references in automations.",
+      "source": "https://learn.chatgpt.com/docs/whats-new"
+    },
+    {
+      "date": "2026-09-01",
+      "platform": "google-ai",
+      "impact": "medium",
+      "title": "September 2026 Google AI Updates Recap",
+      "summary": "Gemini 4 Argon released (frontier reasoning, 1M token output, cybersecurity focus); Gemini 3.8 Flash/Live models; Connected Apps added to Gemini App (Airtable, Linear, monday.com, PandaDoc, Adobe, Picsart, Squarespace, Webflow, Peloton, SeatGeek, Experian); WeatherNext 3 integrated across Search, Gemini, Maps, Cloud.",
+      "for_b2b": "Gemini 4 Argon available to trusted cyber defenders via Fairwind Program; not yet broadly available. Connected Apps signal Google's direction for Personal Intelligence in Search — monitor which productivity/creative platforms gain integration.",
+      "source": "https://blog.google/innovation-and-ai/technology/ai/google-ai-updates-september-2026/"
+    },
+    {
+      "date": "2026-08-08",
+      "platform": "chatgpt",
+      "impact": "high",
+      "title": "ChatGPT Dramatically Reduces Reddit Citations (August 2026 Cliff)",
+      "summary": "Multiple independent trackers recorded ChatGPT Reddit citations collapsing ~86-94% in two steps (Aug 8 and Aug 14). ChatGPT total answer volume stayed flat; it cited Reddit less. OpenAI stated it doesn't set fixed visibility for individual sites.",
+      "for_b2b": "Reddit strategy for ChatGPT visibility largely invalidated. Pivot to YouTube, owned content, authoritative third-party sites, and Google AI Overviews/Perplexity where Reddit citations remain strong or growing.",
+      "source": "https://www.searchable.com/data/what-replaced-reddit-in-chatgpt"
+    },
+    {
+      "date": "2026-05-19",
+      "platform": "google-ai",
+      "impact": "medium",
+      "title": "Google AI Mode Reaches 1 Billion Monthly Active Users Globally",
+      "summary": "Announced at Google I/O 2026. AI Mode queries more than doubled each quarter since May 2025 launch. Average AI Mode search is 3x longer than traditional search. 1 in 6 searches use voice/images. 1B MAU but only ~0.4% of US Google searches.",
+      "for_b2b": "AI Mode is a growing but still small query surface. Optimize for task-completion queries (longer, multi-step). Ensure content answers 'where to', 'where should I', 'ideas for' patterns. Structured, extractable facts critical for agentic shortlisting.",
+      "source": "https://blog.google/products-and-platforms/products/search/ai-mode-us-insights/"
     }
   ],
   "stats": [
+    {
+      "stat": "ChatGPT weekly active users",
+      "value": "1.2B+",
+      "as_of": "2026-11-03",
+      "source": "https://www.searchenginejournal.com/googles-search-volume-is-about-5x-chatgpts-openai-says/595817/"
+    },
+    {
+      "stat": "ChatGPT search-like queries as share of Google search volume",
+      "value": "~20% (1/5th, OpenAI claim, unaudited)",
+      "as_of": "2026-11-03",
+      "source": "https://www.searchenginejournal.com/googles-search-volume-is-about-5x-chatgpts-openai-says/595817/"
+    },
+    {
+      "stat": "AI Mode monthly active users",
+      "value": "1B+",
+      "as_of": "2026-05-19",
+      "source": "https://blog.google/products-and-platforms/products/search/ai-mode-us-insights/"
+    },
+    {
+      "stat": "AI Overviews monthly active users",
+      "value": "2.5B+",
+      "as_of": "2026-08-31",
+      "source": "https://keywordseverywhere.com/news/ai-overviews/"
+    },
+    {
+      "stat": "ChatGPT citations per answer Oct 2026",
+      "value": "Before: 8.99 cited, 0.18 inline links; After: 5.43 cited, 2.81 inline",
+      "as_of": "2026-11-02",
+      "source": "https://threadslab.in/research/chatgpt-citations-october-2026"
+    },
+    {
+      "stat": "Top-result click loss when AI Overview shows",
+      "value": "-58%",
+      "as_of": "2026-02-28",
+      "source": "https://keywordseverywhere.com/news/ai-overviews/"
+    },
     {
       "stat": "Overlap between AI citations and Google top-10",
       "value": "~12%",
